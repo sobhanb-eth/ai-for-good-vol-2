@@ -29,8 +29,9 @@ function hiveDefaultUrl(): string {
 export const CFG = {
   // LLM: drafts the analysis on "Add a post" and coaches students' reasoning.
   get llmKey() { return process.env.OPENAI_API_KEY || ""; },
-  // Must accept images: the "Add a post" analysis sends the uploaded picture.
-  get llmModel() { return process.env.OPENAI_MODEL || "gpt-4.1-mini"; },
+  // Must accept images: the "Add a post" analysis sends the uploaded picture. gpt-5.6-terra
+  // matched slower models on image judgement in our benchmark at about 2.8 s per call.
+  get llmModel() { return process.env.OPENAI_MODEL || "gpt-5.6-terra"; },
   get llmUrl() { return chatCompletionsUrl(process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"); },
   // Hive: AI-generated image detection (also reports Content Credentials / C2PA).
   get hiveVersion() { return hiveVersion(); },
@@ -41,7 +42,9 @@ export const CFG = {
   get hiveAudioUrl() { return process.env.HIVE_AUDIO_API_URL || process.env.HIVE_API_URL || hiveDefaultUrl(); },
   // OpenAI: AI-written text detection (LLM judgment). Reuses the OpenAI key and
   // endpoint above; OPENAI_TEXT_MODEL can point at a smarter model than OPENAI_MODEL.
-  get textModel() { return process.env.OPENAI_TEXT_MODEL || "gpt-6.1-terra"; },
+  // gpt-4.1 (no hidden reasoning) was the fastest and most accurate on our hard cases,
+  // including the Armenian decree post, at about 0.7 s per call.
+  get textModel() { return process.env.OPENAI_TEXT_MODEL || "gpt-4.1"; },
 };
 
 export function providerStatus() {

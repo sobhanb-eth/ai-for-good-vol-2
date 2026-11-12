@@ -1120,13 +1120,59 @@ const ALL_ITEMS = [
       detector: ["99.1% likely AI-generated. Most likely source: GPT Image 2 (93.1%).", "hive"]
     },
     det: { says: "fake", show: "99.1% AI" }
+  },
+  {
+    id: "firereal", tier: "spot", media: "image", answer: "real", category: "Real photo", trick: "none",
+    settle: "it's an ordinary after-the-fact news scene: tangled hoses on a wet street, firefighters still at work, and plain street signs.",
+    credit: "Real news photo of a fire at a shopping row in Yerevan (cropped). Source and photographer still to be credited.",
+    post: { name: "Yerevan Local News", handle: "@yvn.local.news", time: "2 h", av: "#3b5b7a",
+      caption: "Fire at the shopping row this morning. Firefighters are still working on site. No injuries reported.", likes: "1,236", comments: "184 comments", shares: "97 shares" },
+    scene: { img: "img/fire-real.jpg", desc: "The aftermath of a fire at a row of shops: red hoses tangled across a wet street, firefighters with ladders at a burnt glass facade, a fire truck and people watching." },
+    marks: [
+      { x: 24, y: 72, ok: true, label: "Tangled hoses and puddles on a wet street: boring, messy details. Real news photos are rarely composed." },
+      { x: 92, y: 24, ok: true, label: "Ordinary, readable parking and speed signs. AI images often garble small text." },
+      { x: 64, y: 50, ok: true, label: "Firefighters still working with ladders, onlookers at a distance: people behave the way they would after a fire." }
+    ],
+    keys: [["hose","messy","wet","puddle","ordinary","boring"],["after","aftermath","already out","no flame","over"],["sign","parking","speed","lettering","text"],["firefighter","truck","ladder","people","onlooker","watching"]],
+    explanation: "Real. It looks messy and undramatic because it is: the photographer arrived after the fire was out. Tangled hoses, puddles, ordinary signs and people standing around. Compare it with the AI ‘CITY’ fire, which shows the most dramatic second.",
+    checks: {
+      account: ["Local news page since 2014 · named editor · links to its website.", "story"],
+      reverse: ["Earliest copy: a news agency photo of this fire.", "story"],
+      reports: ["Several news sites and the fire service report this fire.", "story"],
+      provenance: ["No Content Credentials found.", "hive"],
+      detector: ["0% likely AI-generated: not AI.", "hive"]
+    },
+    det: { says: "real", show: "0% AI" }
+  },
+  {
+    id: "firefake", tier: "spot", media: "image", answer: "fake", category: "AI-generated image", trick: "sensation",
+    settle: "there are no fire trucks, firefighters or police at a fire this size, the signs are garbled, and no fire service or news site reports a fire today.",
+    credit: "AI-generated image made for this prototype. Not a real event.",
+    post: { name: "Armenia Breaking 24", handle: "@armenia.breaking24", time: "9 min", av: "#8a2b2b",
+      caption: "HUGE FIRE at the CITY shopping center RIGHT NOW 🔥🔥 people trapped inside!!! Share so everyone stays away!", likes: "18,904", comments: "4,211 comments", shares: "9,730 shares" },
+    scene: { img: "img/fire-ai.jpg", desc: "A glass shopping center with ‘CITY’ signs engulfed in flames and black smoke under a clear blue sky, with cars parked nearby and people walking past." },
+    marks: [
+      { x: 23, y: 43, ok: false, label: "The ‘CITY’ logo has an extra letter, and the small signs are generic or nonsense." },
+      { x: 55, y: 75, ok: false, label: "No fire trucks or firefighters at a fire this size." },
+      { x: 66, y: 80, ok: false, label: "People walk past calmly and cars stay parked next to a burning building." }
+    ],
+    keys: [["sign","logo","city","letter","text","garbled","nonsense"],["firefighter","fire truck","truck","police","no one","nobody"],["calm","walking","parked","cars","people"],["cinematic","dramatic","perfect","movie","angle"],["trapped","source","caption","share"]],
+    explanation: "AI-generated. It shows the most dramatic second from a perfect angle, but forgets the people who would be there: no firefighters, no trucks, no police, and pedestrians strolling past. The ‘CITY’ logo has a stray letter and the small signs are nonsense. Hive's detector caught this one (99.2% AI), but it missed other ChatGPT images in this round.",
+    checks: {
+      account: ["Created 5 days ago · only ‘BREAKING’ posts, no named editor.", "story"],
+      reverse: ["No earlier copies anywhere.", "story"],
+      reports: ["Fire service and news sites: no fire at any CITY shopping center today.", "story"],
+      provenance: ["No Content Credentials found.", "hive"],
+      detector: ["99.2% likely AI-generated. Most likely source: GPT Image 2 (90.1%).", "hive"]
+    },
+    det: { says: "fake", show: "99.2% AI" }
   }
 ];
 const ROUNDS = {
   pitch: ["cafe", "flood", "opera", "ararat"],
   full: ["cafe", "cascade", "sevan", "flood", "ararat", "opera", "decree", "voice", "mall"],
   pairs: ["lights", "hills", "butterfly", "ducks", "vine", "tower", "mirror", "bee"],
-  hard: ["sevanreal", "sevanai", "leopard", "fountains", "sinkhole", "airport"]
+  hard: ["sevanreal", "sevanai", "leopard", "fountains", "sinkhole", "airport", "firereal", "firefake"]
 };
 let ITEMS = ALL_ITEMS;
 
@@ -1303,7 +1349,7 @@ function startHTML() {
             <button class="btn btn-primary" type="submit" data-mode="pitch">Enter gauntlet</button>
             <button class="btn" type="submit" data-mode="full">Full round <small>9 posts · about 6 min</small></button>
             <button class="btn" type="submit" data-mode="pairs">Detective round <small>8 photo pairs · about 6 min</small></button>
-            <button class="btn" type="submit" data-mode="hard">Harder round <small>6 posts · about 4 min</small></button>
+            <button class="btn" type="submit" data-mode="hard">Harder round <small>8 posts · about 5 min</small></button>
             ${CUSTOM.length ? `<button class="btn" type="submit" data-mode="custom">Teacher's posts <small>${CUSTOM.length} items</small></button>` : ""}
           </div>
         </form>
@@ -1504,7 +1550,7 @@ function playerStats() {
   };
 }
 
-const SHORT = { leopard: "Snow leopard on Northern Avenue", sevanreal: "Sevan shore ice (real)", sevanai: "Skating on frozen Sevan", sinkhole: "Mashtots Avenue sinkhole", fountains: "Rainbow fountains", airport: "All Zvartnots flights cancelled", cafe: "Café on Northern Avenue", cascade: "Morning at the Cascade", sevan: "Lake Sevan “no filter”", flood: "Flooded Republic Square", ararat: "“UFO” cloud over Ararat", opera: "Opera “on fire”", decree: "Saturday-school decree (Armenian)", voice: "“Dean” voice message", mall: "Free iPhone queue", lights: "Strange lights over the rooftops", hills: "“Caves” on the hill", butterfly: "Butterfly macro “no filter”", ducks: "“Unedited” lake ducks", vine: "Autumn vine close-up", tower: "“Ghost building” in the tower", mirror: "Winter road in the mirror", bee: "Spring bee close-up" };
+const SHORT = { firereal: "Shopping-row fire (real)", firefake: "‘CITY’ shopping center fire", leopard: "Snow leopard on Northern Avenue", sevanreal: "Sevan shore ice (real)", sevanai: "Skating on frozen Sevan", sinkhole: "Mashtots Avenue sinkhole", fountains: "Rainbow fountains", airport: "All Zvartnots flights cancelled", cafe: "Café on Northern Avenue", cascade: "Morning at the Cascade", sevan: "Lake Sevan “no filter”", flood: "Flooded Republic Square", ararat: "“UFO” cloud over Ararat", opera: "Opera “on fire”", decree: "Saturday-school decree (Armenian)", voice: "“Dean” voice message", mall: "Free iPhone queue", lights: "Strange lights over the rooftops", hills: "“Caves” on the hill", butterfly: "Butterfly macro “no filter”", ducks: "“Unedited” lake ducks", vine: "Autumn vine close-up", tower: "“Ghost building” in the tower", mirror: "Winter road in the mirror", bee: "Spring bee close-up" };
 
 function detectorHTML() {
   const rows = ALL_ITEMS.map(it => {
@@ -1552,6 +1598,7 @@ function summaryHTML() {
       <span>Opera: edited with Google Gemini (smoke, flames and fire trucks added) from <a href="https://commons.wikimedia.org/wiki/File:Jerewan-Oper-msu-wlm-2435.jpg" target="_blank" rel="noopener">a photo by Matthias Süßen</a>, CC BY-SA 4.0; the edit is shared under the same license.</span>
       <span>Cascade: <a href="https://commons.wikimedia.org/wiki/File:2014_Erywa%C5%84,_Park_przy_Kaskadach_(02).jpg" target="_blank" rel="noopener">Marcin Konsek</a>, CC BY-SA 4.0. Ararat: <a href="https://commons.wikimedia.org/wiki/File:Agri_Da%C4%9F%C4%B1_ve_Ete%C4%9Findeki_K%C3%B6y.jpg" target="_blank" rel="noopener">Cetintas555</a>, CC BY-SA 4.0. Store queue: <a href="https://commons.wikimedia.org/wiki/File:Line_at_the_opening_of_first_Apple_Store_in_America.jpg" target="_blank" rel="noopener">Blake Patterson</a>, CC BY 2.0. All via Wikimedia Commons, cropped.</span>
       <span>Detective round pairs: original photos by the project team (Panasonic DC-G90, 2025–2026); the AI variants were generated from those photos for this prototype. The forensic change tables are in <b>docs/refs</b>.</span>
+      <span>Shopping-row fire: real news photo, source and photographer still to be credited. ‘CITY’ shopping center fire: AI-generated for this prototype; it is not a real event.</span>
       <span>Snow leopard, frozen-Sevan skating, sinkhole and airport: AI images generated with ChatGPT (OpenAI). Sevan shore ice: <a href="https://commons.wikimedia.org/wiki/File:Sevan-Winter_(27).jpg" target="_blank" rel="noopener">23artashes</a>, CC BY-SA 3.0. Fountains: <a href="https://commons.wikimedia.org/wiki/File:Yerevan,_Musical_fountains,_Colored_fountains,_Republic_Square_at_night,_Armenia.jpg" target="_blank" rel="noopener">Vyacheslav Argenberg</a>, CC BY 4.0.</span>
       <span>Detector results were recorded on 11–12 November 2026 with Hive's public demo, FineTuned LFM3 Omni and Google's SynthID check in Gemini.</span></div>
   </section>`;
