@@ -1,0 +1,10 @@
+/* Global reset. The game itself (public/game.html) carries its own design system;
+   this only styles the rare fallback page React renders directly. */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, sans-serif;
+  background: #eceef2;
+  color: #13161d;
+}

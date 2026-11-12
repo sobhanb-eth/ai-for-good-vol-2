@@ -1,0 +1,26 @@
+{
+  "name": "fakespotter-arena",
+  "version": "2.0.0",
+  "description": "A real-or-fake game that trains students to spot AI fakes, with a teacher dashboard and live AI detectors. Next.js PWA.",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "license": "UNLICENSED"
+}
