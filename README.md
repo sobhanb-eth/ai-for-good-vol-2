@@ -32,7 +32,7 @@ For a production build: `npm run build` then `npm start`.
 | Setting | What it switches on | Where to get it |
 |---|---|---|
 | `OPENAI_API_KEY` | The draft analysis on "Add a post", and the AI coach that grades students' reasoning | https://platform.openai.com/api-keys |
-| `HIVE_API_KEY` | Live AI-image detection score, likely generator, Content Credentials | Hive dashboard → create an *AI-Generated Content Detection* project → API key |
+| `HIVE_API_KEY` | Live AI-image and AI-voice detection score, likely generator, Content Credentials | https://thehive.ai → sign in → left sidebar **Service API Keys** → **Create API Key** (free tier, about 100 requests a day) |
 | `HIVE_AUDIO_API_KEY` | Live AI-voice detection (optional; reuses `HIVE_API_KEY` if empty) | Hive dashboard → audio detection project |
 | `OPENAI_TEXT_MODEL` | Live AI-text detection (uses `OPENAI_API_KEY`) | Any chat model on your OpenAI account; default `gpt-6.1-terra` (also `gpt-6-luna`, `gpt-6.1-sol`) |
 
@@ -40,7 +40,7 @@ For a production build: `npm run build` then `npm start`.
 
 The LLM call is OpenAI-compatible: any provider that speaks the `/chat/completions` protocol works. Point `OPENAI_BASE_URL` at it and set `OPENAI_MODEL`. Defaults: `https://api.openai.com/v1` and `gpt-4o-mini`. AI-text detection uses the same key and endpoint with a smarter model: set `OPENAI_TEXT_MODEL` (default `gpt-6.1-terra`).
 
-If your Hive dashboard shows a different endpoint for your project, change `HIVE_API_URL` in `.env.local`.
+The app uses Hive's documented v2 task API by default (a per-project key, sent as `Authorization: token <key>`). If you have a self-serve V3 key instead, set `HIVE_API_VERSION=v3`. Without `HIVE_API_VERSION`, the version is read from `HIVE_API_URL`.
 
 **Without a key, nothing breaks:** the detector box says "Not configured", and the AI parts fall back to a simple built-in version.
 
@@ -96,6 +96,7 @@ Posts added by the teacher are saved in that browser only (this is a prototype).
 
 - **The detector never decides the answer.** In our tests it caught every AI image, but called AI-written Armenian text 100% human and couldn't catch a real photo with a false caption. The teacher sets the answer.
 - The detector results shown on the built-in posts were recorded on 11 November 2026 with Hive's public demo, FineTuned LFM3 Omni and Google's SynthID check in Gemini.
+- The **Harder round** posts (snow leopard, frozen-Sevan skating, sinkhole, airport) are AI images generated with ChatGPT; two of them fooled Hive's detector, which is the point of the round. The Sevan shore ice and Republic Square fountains are real Wikimedia Commons photos.
 - The **Detective round** posts are built from the team's own camera photos (Panasonic DC-G90, 2025–2026) and AI variants generated from them. The untouched originals keep their camera EXIF; the AI files carry none. No automated detector ran on these pairs — the original photo is the evidence. Forensic change tables: `docs/refs/`.
 - Image credits: AI images made with Google Gemini. Real photos from Wikimedia Commons by Marcin Konsek (CC BY-SA 4.0), Cetintas555 (CC BY-SA 4.0), Blake Patterson (CC BY 2.0) and Matthias Süßen (CC BY-SA 4.0; the edited Opera image is shared under the same license).
 - API response formats can change. If a detector returns an error, check its docs and the `parseHive` or `callOpenAITextDetect` functions in `lib/providers.ts`.

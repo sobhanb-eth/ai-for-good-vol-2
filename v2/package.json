@@ -1,0 +1,14 @@
+{
+  "name": "fakespotter-arena",
+  "version": "1.0.0",
+  "description": "A real-or-fake game that trains students to spot AI fakes, with a teacher dashboard and live AI detectors.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

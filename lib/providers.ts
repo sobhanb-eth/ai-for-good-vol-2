@@ -9,17 +9,35 @@ function chatCompletionsUrl(raw: string): string {
   return `${trimmed}/chat/completions`;
 }
 
+// Hive's documented task API is v2 (per-project key, "Authorization: token <key>", multipart
+// "media" field): https://docs.thehive.ai/reference/authentication
+// HIVE_API_VERSION wins when set; otherwise the version is read from HIVE_API_URL, so a v2 URL
+// never gets v3's Bearer auth. With neither set, use v2.
+function hiveVersion(): "v2" | "v3" {
+  const explicit = (process.env.HIVE_API_VERSION || "").trim().toLowerCase();
+  if (explicit === "v2" || explicit === "v3") return explicit;
+  return /\/api\/v3\//.test(process.env.HIVE_API_URL || "") ? "v3" : "v2";
+}
+const HIVE_VERSION = hiveVersion();
+const HIVE_DEFAULT_URL =
+  HIVE_VERSION === "v2"
+    ? "https://api.thehive.ai/api/v2/task/sync"
+    : "https://api.thehive.ai/api/v3/hive/ai-generated-and-deepfake-content-detection";
+
 export const CFG = {
   // LLM: drafts the analysis on "Add a post" and coaches students' reasoning.
   llmKey: process.env.OPENAI_API_KEY || "",
-  llmModel: process.env.OPENAI_MODEL || "gpt-4o-mini",
+  // Must accept images: the "Add a post" analysis sends the uploaded picture.
+  llmModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
   llmUrl: chatCompletionsUrl(process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"),
   // Hive: AI-generated image detection (also reports Content Credentials / C2PA).
+  // v3 = self-serve "Service API Keys" (default). v2 = older enterprise project keys.
+  hiveVersion: HIVE_VERSION,
   hiveKey: process.env.HIVE_API_KEY || "",
-  hiveUrl: process.env.HIVE_API_URL || "https://api.thehive.ai/api/v2/task/sync",
-  // Hive: AI-generated audio detection (Hive issues a separate key per project).
+  hiveUrl: process.env.HIVE_API_URL || HIVE_DEFAULT_URL,
+  // Hive: AI-generated audio detection. Leave the audio key empty to reuse HIVE_API_KEY.
   hiveAudioKey: process.env.HIVE_AUDIO_API_KEY || "",
-  hiveAudioUrl: process.env.HIVE_AUDIO_API_URL || process.env.HIVE_API_URL || "https://api.thehive.ai/api/v2/task/sync",
+  hiveAudioUrl: process.env.HIVE_AUDIO_API_URL || process.env.HIVE_API_URL || HIVE_DEFAULT_URL,
   // OpenAI: AI-written text detection (LLM judgment). Reuses the OpenAI key and
   // endpoint above; OPENAI_TEXT_MODEL can point at a smarter model than OPENAI_MODEL.
   textModel: process.env.OPENAI_TEXT_MODEL || "gpt-6.1-terra",
@@ -56,7 +74,10 @@ export async function callLLM(prompt: string, images: LLMImage[] = []): Promise<
     },
     body: JSON.stringify({
       model: CFG.llmModel,
-      max_tokens: 1200,
+      // Current OpenAI models reject the legacy max_tokens; max_completion_tokens also covers
+      // hidden reasoning tokens, so it gets headroom beyond the ~1k-token JSON answer.
+      max_completion_tokens: 4000,
+      response_format: { type: "json_object" },
       messages: [
         { role: "system", content: "Reply with only one valid JSON object, no other text." },
         { role: "user", content },
@@ -93,22 +114,44 @@ export interface DetectionResult {
   label?: string;
 }
 
+type HiveClass = { class: string; score?: number; value?: number };
+
+// Content Credentials (C2PA) sit at different depths in v2 and v3 replies.
+function findC2PA(obj: unknown, depth = 0): string {
+  if (!obj || typeof obj !== "object" || depth > 6) return "";
+  for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
+    if (/c2pa/i.test(k) && v && typeof v === "object") {
+      const o = v as Record<string, unknown>;
+      const parts = [o.claim_generator, o.actions_software_agent, o.generator].filter((x): x is string => typeof x === "string" && !!x);
+      if (parts.length) return parts.join(" · ");
+    }
+    const inner = findC2PA(v, depth + 1);
+    if (inner) return inner;
+  }
+  return "";
+}
+
+// v3: { output: [ { classes: [ {class, value} ] } ] }
+// v2: { status: [ { response: { output: [ { classes: [ {class, score} ] } ] } } ] }
 export function parseHive(j: unknown): { ai: number; sources: Array<{ name: string; score: number }>; c2pa: string } {
-  const out =
-    (j as { status?: Array<{ response?: { output?: Array<Record<string, unknown>> } }> })?.status?.[0]?.response?.output?.[0];
-  if (!out) throw new Error("Unexpected Hive response. Check HIVE_API_URL and that the key belongs to an AI-detection project.");
-  const classes = (out.classes as Array<{ class: string; score: number }> | undefined) || [];
-  const ai = classes.find((c) => c.class === "ai_generated" || c.class === "ai_generated_audio")?.score;
-  const sources = classes
-    .filter((c) => !HEADS.has(c.class) && c.score > 0.01)
-    .sort((a, b) => b.score - a.score)
+  const v2 = (j as { status?: Array<{ response?: { output?: Array<{ classes?: HiveClass[] }> } }> })?.status?.[0]?.response;
+  const outputs = (v2 ? v2.output : (j as { output?: Array<{ classes?: HiveClass[] }> })?.output) || [];
+  if (!outputs.length) throw new Error("Unexpected Hive response. Check HIVE_API_KEY, HIVE_API_VERSION and HIVE_API_URL.");
+  const score = (c: HiveClass) => (typeof c.value === "number" ? c.value : c.score) || 0;
+  // Video and audio return one output per frame or segment: keep the most AI-like one.
+  let best: HiveClass[] = [];
+  let bestAi = -1;
+  for (const o of outputs) {
+    const classes = o.classes || [];
+    const ai = Math.max(0, ...classes.filter((c) => c.class === "ai_generated" || c.class === "ai_generated_audio").map(score));
+    if (ai > bestAi) { bestAi = ai; best = classes; }
+  }
+  const sources = best
+    .filter((c) => !HEADS.has(c.class) && score(c) > 0.01)
+    .sort((a, b) => score(b) - score(a))
     .slice(0, 3)
-    .map((c) => ({ name: c.class, score: c.score }));
-  const c2p = out.algorithmic_tags as { c2pa?: { claim_generator?: string; actions_software_agent?: string } } | undefined;
-  const c2pa = c2p?.c2pa && (c2p.c2pa.claim_generator || c2p.c2pa.actions_software_agent)
-    ? [c2p.c2pa.claim_generator, c2p.c2pa.actions_software_agent].filter(Boolean).join(" · ")
-    : "";
-  return { ai: typeof ai === "number" ? ai : 0, sources, c2pa };
+    .map((c) => ({ name: c.class, score: score(c) }));
+  return { ai: Math.max(bestAi, 0), sources, c2pa: findC2PA(v2 || j) };
 }
 
 export async function callHive(
@@ -118,11 +161,21 @@ export async function callHive(
   key: string,
   url: string
 ): Promise<{ ai: number; sources: Array<{ name: string; score: number }>; c2pa: string }> {
-  const form = new FormData();
-  form.append("media", new Blob([buf as BlobPart], { type: mediaType }), filename);
-  const r = await fetch(url, { method: "POST", headers: { authorization: `Token ${key}` }, body: form });
-  const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(String((j as { message?: string; error?: string }).message || (j as { error?: string }).error || `Hive API error ${r.status}`));
+  let r: Response;
+  if (CFG.hiveVersion === "v2") {
+    const form = new FormData();
+    form.append("media", new Blob([buf as BlobPart], { type: mediaType }), filename);
+    r = await fetch(url, { method: "POST", headers: { authorization: `Token ${key}` }, body: form });
+  } else {
+    const b64 = Buffer.from(buf as ArrayBuffer).toString("base64");
+    r = await fetch(url, {
+      method: "POST",
+      headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
+      body: JSON.stringify({ input: [{ media_base64: `data:${mediaType};base64,${b64}` }], media_metadata: true }),
+    });
+  }
+  const j = (await r.json().catch(() => ({}))) as { message?: string; error?: string; detail?: string };
+  if (!r.ok) throw new Error(String(j.message || j.error || j.detail || `Hive API error ${r.status}`));
   return parseHive(j);
 }
 

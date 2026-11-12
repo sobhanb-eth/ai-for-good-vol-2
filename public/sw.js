@@ -1,7 +1,7 @@
 /* FakeSpotter Arena service worker.
    - Pre-caches the app shell and post images so the game plays offline.
    - API calls (/api/*) always go to the network and are never cached. */
-const CACHE = "fakespotter-v3";
+const CACHE = "fakespotter-v6";
 const PRECACHE = [
   "/",
   "/game.html",
@@ -19,6 +19,12 @@ const PRECACHE = [
   "/img/opera-original.jpg",
   "/img/opera.jpg",
   "/img/sevan.jpg",
+  "/img/leopard.jpg",
+  "/img/sevan-ice-real.jpg",
+  "/img/sevan-ice-ai.jpg",
+  "/img/sinkhole.jpg",
+  "/img/fountains.jpg",
+  "/img/airport.jpg",
   "/img/pairs/lights-ai.jpg",
   "/img/pairs/lights-real.jpg",
   "/img/pairs/hills-ai.jpg",

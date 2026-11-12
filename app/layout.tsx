@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FakeSpotter Arena",
+  title: "ALTERIA · FakeSpotter Arena",
   description:
-    "A real-or-fake game that trains students to spot AI fakes and misleading posts, with a teacher dashboard and live AI detectors.",
+    "A student-led cognitive defense arena for practicing how to assess synthetic and misleading media.",
   manifest: "/manifest.webmanifest",
   appleWebApp: { capable: true, statusBarStyle: "default", title: "FakeSpotter" },
   icons: {
@@ -20,10 +20,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#0d1015" },
-  ],
+  themeColor: "#faf8ff",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

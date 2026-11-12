@@ -1,24 +1,20 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
-<script src="shim.js"></script>
-</head>
-<body>
-<title>FakeSpotter Arena</title>
-<meta name="description" content="A real-or-fake game that trains students to spot AI fakes and misleading posts.">
+<title>ALTERIA · FakeSpotter Arena</title>
+<meta name="description" content="A student-led cognitive defense arena for practicing how to assess synthetic and misleading media.">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="FakeSpotter">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1015">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Armenian:wght@400;500;600&display=swap">
+<meta name="theme-color" content="#faf8ff">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}body{margin:0;font-size:14px;font-family:system-ui,sans-serif}img{max-width:100%}[hidden]{display:none!important}</style>
+<script src="shim.js"></script>
+</head>
+<body>
 <style>
 /* Layout: a verification desk. The post sits on the left like evidence, the call is made on the right. */
 :root {
@@ -289,7 +285,18 @@ textarea { width: 100%; min-height: 76px; resize: vertical; border: 1px solid va
 .tablecard { margin-top: 16px; padding: 18px; display: grid; gap: 12px; }
 .tbl-h { display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
 .tbl-h select { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--line); background: var(--surface-2); }
-.scroll { overflow-x: auto; }
+/* Wide tables scroll sideways on phones. Edge shadows appear only while more columns are hidden that way
+   (covers scroll with the content, shadows stay put), since mobile browsers hide the scrollbar. */
+.scroll {
+  overflow-x: auto;
+  --scroll-bg: var(--surface);
+  background:
+    linear-gradient(to right, var(--scroll-bg) 30%, transparent) left / 32px 100% no-repeat local,
+    linear-gradient(to left, var(--scroll-bg) 30%, transparent) right / 32px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, rgba(19,27,46,.16), transparent) left / 12px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, rgba(19,27,46,.16), transparent) right / 12px 100% no-repeat scroll;
+}
+.detcard .scroll { --scroll-bg: var(--surface-2); }
 table.st { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 760px; }
 .st th { text-align: left; font-weight: 500; color: var(--ink-3); font-size: 12px; text-transform: uppercase; letter-spacing: .05em; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .st td { padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: middle; }
@@ -387,21 +394,224 @@ table.dettable { width: 100%; border-collapse: collapse; font-size: 14px; min-wi
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ALTERIA: shared light shell, compact modules and classroom-safe contrast. */
+:root {
+  color-scheme: light;
+  --bg: #faf8ff;
+  --surface: #ffffff;
+  --surface-2: #f2f3ff;
+  --ink: #131b2e;
+  --ink-2: #444652;
+  --ink-3: #6b7280;
+  --line: #e2e3ed;
+  --accent: #a60067;
+  --accent-soft: #f8eaf3;
+  --accent-ink: #ffffff;
+  --real: #002884;
+  --real-soft: #e9edff;
+  --fake: #721324;
+  --fake-soft: #f8e9eb;
+  --check: #721324;
+  --check-soft: #f8e9eb;
+  --series-1: #002884;
+  --series-2: #a60067;
+  --shadow: 0 2px 8px rgba(0,40,132,.045);
+  --f-display: "Space Grotesk", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-body: "Inter", "Avenir Next", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "SFMono-Regular", Consolas, monospace;
+}
+html { color-scheme: light; scroll-padding-top: 88px; }
+body { background: var(--bg); color: var(--ink); padding-bottom: 32px; }
+.top { border-color: var(--line); box-shadow: 0 1px 0 rgba(0,40,132,.025); }
+.top .wrap { min-height: 74px; gap: 12px; padding-block: 10px; }
+.brand-mark { width: 34px; height: 34px; border-radius: 11px; background: var(--real); }
+.brand b { font-size: 19px; letter-spacing: -.04em; }
+.brand-sub { display: block; margin-top: -2px; color: var(--ink-3); font-size: 10px; letter-spacing: .01em; font-weight: 500; }
+.proto { color: var(--fake); background: var(--fake-soft); font-family: var(--f-body); letter-spacing: 0; text-transform: none; padding: 4px 8px; }
+.tabs { gap: 2px; border: 0; background: transparent; padding: 0; }
+.tabs a { padding: 8px 10px; border-radius: 9px; font-size: 13px; white-space: nowrap; }
+.tabs a { transition: background-color .15s ease, color .15s ease, transform .12s ease; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; }
+.tabs a:hover { color: var(--real); background: var(--surface-2); }
+.tabs a:active { transform: scale(.94); background: var(--real-soft); }
+.tabs a:focus-visible { outline: 2px solid var(--real); outline-offset: 2px; }
+.tabs a[aria-current="page"] { color: var(--real); background: var(--real-soft); box-shadow: none; font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .tabs a { transition: none; } .tabs a:active { transform: none; } }
+.empty-state { max-width: 560px; margin: 28px auto; padding: 28px; display: grid; gap: 10px; justify-items: start; }
+.empty-state h2 { font: 700 28px var(--f-display); letter-spacing: -.03em; }
+.empty-state p { color: var(--ink-2); max-width: 46ch; }
+.empty-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.empty-actions .btn { text-decoration: none; }
+.empty-actions .btn:not(.btn-primary) { color: var(--ink); }
+.scorepill { color: var(--real); background: var(--real-soft); border-radius: 9px; }
+main { padding-block: 18px 60px; }
+.note { max-width: 1120px; margin: 0 auto; padding: 0 0 12px; font-size: 12px; line-height: 1.45; }
+.panel { border-radius: 14px; box-shadow: none; }
+.btn { border-radius: 9px; }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
+.btn-primary:hover { filter: brightness(.95); }
+.tag { border-radius: 7px; }
+.tag.accent { color: var(--accent); background: var(--accent-soft); }
+.tag.real { color: var(--real); background: var(--real-soft); }
+.tag.fake, .tag.check { color: var(--fake); background: var(--fake-soft); }
+.eyebrow { font-family: var(--f-body); font-size: 11px; letter-spacing: .075em; font-weight: 700; }
+.kind, .stat, .grp { border-radius: 10px; }
+.start { display: block; max-width: 920px; margin: 0 auto; padding-top: 8px; }
+.hub { display: grid; grid-template-columns: minmax(0,1fr); gap: 18px; }
+.hub-profile { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; padding: 18px 20px; }
+.hub-identity { display: flex; align-items: center; gap: 14px; min-width: 0; }
+.hub-avatar { width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; flex: none; background: var(--real-soft); color: var(--real); font: 700 15px var(--f-display); }
+.hub-name { font: 700 19px var(--f-display); }
+.hub-level { color: var(--ink-3); font-size: 13px; }
+.hub-cdr { text-align: right; color: var(--real); font: 700 24px var(--f-display); white-space: nowrap; }
+.hub-cdr small { display: block; color: var(--ink-3); font: 600 10px var(--f-body); letter-spacing: .07em; }
+.xp-row { margin-top: 12px; display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--ink-2); }
+.xp-track { height: 5px; margin-top: 6px; border-radius: 99px; overflow: hidden; background: var(--surface-2); }
+.xp-track i { display: block; width: 84%; height: 100%; border-radius: inherit; background: var(--accent); }
+.hub-feature-grid { display: grid; grid-template-columns: minmax(0,1.4fr) minmax(250px,.8fr); gap: 16px; align-items: stretch; }
+.gauntlet { padding: 22px; background: linear-gradient(135deg,#fff 0%,#f2f3ff 100%); border-color: #dfe4f5; display: grid; gap: 12px; }
+.gauntlet-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.rank-mark { color: var(--fake); font-size: 12px; font-weight: 700; }
+.gauntlet h1 { max-width: 12ch; font-size: clamp(34px,6vw,54px); letter-spacing: -.055em; line-height: .99; }
+.gauntlet p { max-width: 52ch; color: var(--ink-2); line-height: 1.55; }
+.gauntlet-metrics { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 2px; }
+.gauntlet-metrics span { padding: 7px 10px; border-radius: 8px; background: white; border: 1px solid var(--line); color: var(--ink-2); font-size: 12px; }
+.gauntlet .btn { justify-self: start; min-width: 210px; margin-top: 4px; }
+.blindspot { padding: 18px; background: #fff8f8; border-color: #efdfe3; display: grid; align-content: start; gap: 10px; }
+.blindspot h2 { font: 600 21px var(--f-display); line-height: 1.15; }
+.blindspot p { color: #5c4148; font-size: 13px; }
+.blindspot .mini-track { height: 6px; border-radius: 99px; background: #f0d9df; overflow: hidden; }
+.blindspot .mini-track i { display: block; width: 54%; height: 100%; background: var(--fake); }
+.blindspot .btn { width: 100%; padding: 8px; color: var(--fake); border-color: #e4c6ce; background: white; }
+.hub-section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin: 4px 0 10px; }
+.hub-section-head h2 { font: 600 21px var(--f-display); letter-spacing: -.025em; }
+.hub-section-head span { color: var(--ink-3); font-size: 12px; }
+.protocol-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.protocol { min-height: 126px; display: flex; flex-direction: column; justify-content: space-between; padding: 14px; text-decoration: none; color: inherit; border: 1px solid var(--line); background: white; border-radius: 11px; }
+.protocol:hover { border-color: #bfc9e7; background: #fcfcff; }
+.protocol-mark { color: var(--real); font: 700 12px var(--f-mono); }
+.protocol strong { font: 600 15px var(--f-display); }
+.protocol small { color: var(--ink-3); font-size: 12px; line-height: 1.4; }
+.cohort-card { padding: 18px 20px; }
+.cohort-row { display: grid; grid-template-columns: 30px minmax(0,1fr) auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.cohort-rank { color: var(--ink-3); font: 600 13px var(--f-mono); }
+.cohort-row strong { display: block; font-size: 14px; }
+.cohort-row small { color: var(--ink-3); font-size: 12px; }
+.cohort-score { color: var(--real); font: 600 14px var(--f-mono); }
+.round-rules { padding: 0 18px; }
+.round-rules summary { padding: 13px 0; color: var(--ink-2); font-size: 13px; cursor: pointer; }
+.round-rules table { width: 100%; margin-bottom: 12px; font-size: 13px; }
+.round-rules td { padding: 6px 0; border-top: 1px solid var(--line); }
+.round-rules td:last-child { text-align: right; font-family: var(--f-mono); }
+.battle { max-width: 1040px; margin: 0 auto; }
+.battle-head { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin: 6px 0 12px; padding: 12px 16px; border: 1px solid var(--line); background: white; border-radius: 12px; }
+.battle-head strong { color: var(--real); font: 600 13px var(--f-display); }
+.battle-head span { color: var(--ink-3); font-size: 12px; }
+.battle-rival { display: flex; gap: 10px; align-items: center; flex: none; white-space: nowrap; }
+.battle-rival b { color: var(--ink); }
+.progress span { height: 4px; }
+.progress span.done-good { background: var(--real); }
+.progress span.done-bad { background: var(--fake); }
+.progress span.now { background: var(--accent); }
+.game { gap: 16px; padding-top: 8px; }
+.side { top: 90px; border-radius: 14px; }
+.side h2 { font-size: 24px; }
+.vbtn { font-family: var(--f-display); font-size: 19px; border-radius: 10px; }
+.vbtn.real[aria-pressed="true"] { background: var(--real); color: white; }
+.vbtn.fake[aria-pressed="true"] { background: var(--fake); color: white; }
+.vbtn.real:hover,.vbtn.fake:hover { transform: translateY(-1px); }
+.checkp { border-color: var(--line); }
+.tool { border-radius: 9px; }
+.debrief-screen { max-width: 1040px; margin: 0 auto; display: grid; gap: 14px; }
+.debrief-columns { display: grid; grid-template-columns: minmax(0,1fr) minmax(340px,.92fr); gap: 16px; align-items: start; }
+.debrief-columns .side { position: static; }
+.debrief-columns .post { margin-bottom: 12px; }
+.debrief-columns .checkp { box-shadow: none; }
+.res-head { border-radius: 10px; }
+.res-head.bad { background: var(--fake-soft); color: var(--fake); }
+.res-head.good { background: var(--real-soft); color: var(--real); }
+.coach { border-color: #dfe4f5; background: #f6f7ff; }
+.coach-h { color: var(--real); }
+.coach .tag.accent { color: var(--accent); }
+.trick-on { background: var(--fake-soft); }
+.trick-on b { color: var(--fake); }
+.summary { max-width: 920px; margin: 8px auto 0; border-radius: 14px; padding: 22px; gap: 18px; }
+.sum-top h2 { letter-spacing: -.045em; }
+.bigscore { color: var(--real); }
+.stat { border-radius: 10px; }
+.profile-box { background: var(--real-soft); border-radius: 10px; }
+.t-head h1 { letter-spacing: -.045em; }
+.t-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.vector-matrix { margin-top: 14px; padding: 18px; display: grid; gap: 14px; }
+.vector-grid { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 10px; }
+.vector-card { padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #fff; display: grid; gap: 8px; }
+.vector-card header { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 12px; color: var(--ink-2); }
+.vector-card strong { font: 600 20px var(--f-display); color: var(--real); }
+.vector-card .mini-track { height: 5px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+.vector-card .mini-track i { display: block; height: 100%; border-radius: inherit; background: var(--real); }
+.vector-card.risk strong { color: var(--fake); }
+.vector-card.risk .mini-track i { background: var(--fake); }
+.kpi, .card, .tablecard { border-radius: 12px; box-shadow: none; }
+.kpi .v { color: var(--real); }
+.grp { border-radius: 9px; }
+.grp .names .you { color: var(--accent); }
+.st tr.you td { background: var(--real-soft); }
+.st tr.you td:first-child { color: var(--real); }
+.addgrid .panel, .detcard { border-radius: 12px; box-shadow: none; }
+@media (max-width: 860px) {
+  body { padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px)); }
+  .top .wrap { min-height: 64px; }
+  .proto { display: none; }
+  .tabs { position: fixed; z-index: 20; inset: auto 0 0; margin: 0; padding: 8px max(12px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)); justify-content: space-around; background: rgba(255,255,255,.96); border-top: 1px solid var(--line); backdrop-filter: blur(14px); }
+  .tabs a { flex: 1; text-align: center; padding: 8px 3px; font-size: 11px; }
+  .scorepill { margin-left: auto; }
+  .note { padding-inline: 16px; }
+  .hub-feature-grid { grid-template-columns: minmax(0,1fr); }
+  .protocol-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .debrief-columns { grid-template-columns: minmax(0,1fr); }
+  .debrief-columns .post { margin-bottom: 10px; }
+  .vector-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 520px) {
+  .top .wrap { padding-inline: 14px; }
+  .brand b { font-size: 17px; }
+  .brand-sub { font-size: 9.5px; }
+  .start { padding-top: 4px; }
+  .hub { gap: 12px; }
+  .hub-profile { padding: 14px; }
+  .hub-avatar { width: 42px; height: 42px; }
+  .hub-name { font-size: 17px; }
+  .hub-cdr { font-size: 21px; }
+  .gauntlet { padding: 18px; }
+  .gauntlet h1 { font-size: 40px; }
+  .gauntlet .modes .btn { flex: 1 1 100%; min-width: 0; }
+  .empty-state { margin-top: 12px; padding: 20px; }
+  .empty-actions > * { flex: 1 1 100%; }
+  .empty-actions .btn { width: 100%; text-align: center; }
+  .blindspot { padding: 16px; }
+  .protocol { min-height: 116px; padding: 12px; }
+  .battle-head { padding: 10px 12px; }
+  .battle-head span { font-size: 11px; }
+  .battle-rival { gap: 5px; }
+  .debrief-columns .side { padding: 16px; }
+  .summary { padding: 18px 14px; }
+}
 </style>
 
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#play" aria-label="FakeSpotter Arena, play">
+    <a class="brand" href="#play" aria-label="ALTERIA · FakeSpotter Arena, Arena Hub">
       <span class="brand-mark" aria-hidden="true">
-        <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="7.5" cy="7.5" r="5" fill="none" stroke="#fff" stroke-width="2"/><path d="M11.3 11.3 16 16" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M5.3 7.6 7 9.2l2.8-3.2" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg width="19" height="19" viewBox="0 0 24 24"><path d="M12 2.5 20 6v5.4c0 4.7-3 8.1-8 10.1-5-2-8-5.4-8-10.1V6l8-3.5Z" fill="none" stroke="#fff" stroke-width="1.8"/><path d="m8.4 12.1 2.2 2.2 5-5.1" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </span>
-      <b>FakeSpotter Arena</b>
+      <span><b>ALTERIA</b><small class="brand-sub">FakeSpotter Arena</small></span>
     </a>
-    <span class="proto">Prototype</span>
+    <span class="proto">Research prototype</span>
     <nav class="tabs" aria-label="Views">
-      <a href="#play" id="tab-play">Student game</a>
-      <a href="#teacher" id="tab-teacher">Teacher view</a>
-      <a href="#add-post" id="tab-add">Add a post</a>
+      <a href="#play" id="tab-play">Arena Hub</a>
+      <a href="#battle" id="tab-battle">Live Battle</a>
+      <a href="#debrief" id="tab-debrief">Debrief</a>
+      <a href="#teacher" id="tab-teacher">Susceptibility</a>
     </nav>
     <span class="scorepill" id="scorepill" hidden>0 pts</span>
   </div>
@@ -409,7 +619,7 @@ table.dettable { width: 100%; border-collapse: collapse; font-size: 14px; min-wi
 
 <main>
   <div class="wrap">
-    <p class="note">Prototype content: AI images and an AI-edited photo made with Google Gemini, real photos from Wikimedia Commons, AI-written text and a synthetic voice. Check results come from real tools run on these files. The teacher view mixes a fictional demo class with your live results.</p>
+    <p class="note">Training content includes generated, edited, synthetic and real media. The class telemetry is a fictional demo; your own round answers stay on this device.</p>
     <section id="view-play"></section>
     <section id="view-teacher" hidden></section>
     <section id="view-add" hidden></section>
@@ -441,6 +651,7 @@ const TRICKS = {
   authority: { name: "Fake authority", desc: "Official-sounding decisions and numbers that don't exist." },
   impersonation: { name: "Impersonation", desc: "A trusted voice faked, plus “no need to check”." },
   reused: { name: "Reused old photo", desc: "A real photo from another time and place, with a new story." },
+  sensation: { name: "Shock value", desc: "Amazing or scary scenes spread fastest, so fakes pick them." },
   none: { name: "No trick", desc: "It's real. Strange or ordinary, it really happened." }
 };
 
@@ -792,12 +1003,130 @@ const ALL_ITEMS = [
       detector: ["No AI detector was run on this pair — the comparison with the original is the only reliable proof.", "none"]
     },
     det: null
+  },
+  {
+    id: "leopard", tier: "check", media: "image", answer: "fake", category: "AI-generated image", trick: "sensation",
+    settle: "no police, zoo or news report exists, and the account is a meme page. Even the AI detector got this one wrong.",
+    credit: "AI image generated with ChatGPT (OpenAI) for this prototype.",
+    post: { name: "Yerevan Today", handle: "@yerevan.today.live", time: "25 min", av: "#8a5a2b",
+      caption: "A SNOW LEOPARD on Northern Avenue right now!! Stay inside 😳", likes: "12,480", comments: "3,902 comments", shares: "8,115 shares" },
+    scene: { img: "img/leopard.jpg", desc: "Night photo from a balcony: a snow leopard walking down Northern Avenue while people film it on their phones." },
+    marks: [],
+    keys: [["police","zoo","news","report","nobody"],["account","meme","page","followers"],["calm","filming","close","people","danger"],["detector","wrong","fooled"]],
+    explanation: "Made with ChatGPT's image generator, and it fooled the AI detector too (22% AI, “not likely AI”). The reliable clues are outside the picture: no police or zoo report, a meme account, and people calmly filming a wild predator a few meters away.",
+    checks: {
+      account: ["Meme page · created 6 weeks ago · 48K followers · mostly viral videos.", "story"],
+      reverse: ["No earlier copies. First posted 25 minutes ago.", "story"],
+      reports: ["No police, zoo or news report of an escaped snow leopard. The zoo says all its animals are accounted for.", "story"],
+      provenance: ["No Content Credentials found. They're lost when an image is screenshotted or re-saved.", "hive"],
+      detector: ["22.2% likely AI-generated: “not likely AI”. The detector is wrong here. Its best guess at a source: GPT Image (19.4%).", "hive"]
+    },
+    det: { says: "real", show: "22.2% AI" }
+  },
+  {
+    id: "sevanreal", tier: "spot", media: "image", answer: "real", category: "Real photo", trick: "none",
+    settle: "it's full of ordinary details AI tends to skip: litter and dry grass on the shore, uneven slushy ice, plain cabins.",
+    credit: "Photo: 23artashes, CC BY-SA 3.0, via Wikimedia Commons (cropped).",
+    post: { name: "Sevan Life", handle: "@sevan.life", time: "4 h", av: "#2b6c8a",
+      caption: "Late winter at Sevan: only the shore froze ❄️ 📷 23artashes / Wikimedia Commons", likes: "418", comments: "22 comments", shares: "9 shares" },
+    scene: { img: "img/sevan-ice-real.jpg", desc: "The shore of Lake Sevan with slushy ice, rocks, dry grass and small cabins behind." },
+    marks: [
+      { x: 10, y: 70, ok: true, label: "Litter and dry grass on the shore: ordinary mess that AI images usually tidy away." },
+      { x: 45, y: 14, ok: true, label: "Plain, uneven cabins and poles: nothing staged or ‘perfect’." }
+    ],
+    keys: [["litter","trash","grass","messy","ordinary","shore"],["cabin","house","plain","uneven","normal"],["credit","photographer","commons"]],
+    explanation: "Real. A plain, slightly messy photo: litter, dry grass, slushy ice, ordinary cabins. Compare it with the AI ‘frozen Sevan’ post, which looks like a perfect postcard.",
+    checks: {
+      account: ["Local page about Lake Sevan since 2015 · credits photographers.", "story"],
+      reverse: ["Earliest copy: the photographer's own upload to Wikimedia Commons, March 2012.", "commons"],
+      reports: ["Not a news event.", "story"],
+      provenance: ["The original file keeps its camera data: taken 25 March 2012, 17:27. No Content Credentials on the shared copy (Hive).", "commons"],
+      detector: ["0% likely AI-generated: not AI.", "hive"]
+    },
+    det: { says: "real", show: "0% AI" }
+  },
+  {
+    id: "sevanai", tier: "check", media: "image", answer: "fake", category: "AI-generated image", trick: "authentic",
+    settle: "the weather service says only the shallow shore froze and the lake isn't safe to walk on, and nobody else posted this scene.",
+    credit: "AI image generated with ChatGPT (OpenAI) for this prototype.",
+    post: { name: "Travel Armenia Daily", handle: "@travel.armenia.daily", time: "2 h", av: "#3d7a6a",
+      caption: "Lake Sevan froze completely this weekend! We skated all the way to the monastery ⛸️ #nofilter", likes: "21,307", comments: "1,804 comments", shares: "6,560 shares" },
+    scene: { img: "img/sevan-ice-ai.jpg", desc: "Families skating and pulling a sled on clear frozen Lake Sevan, Sevanavank on the hill behind." },
+    marks: [],
+    keys: [["weather","service","shore","safe","thin"],["nobody","other","report","news"],["account","page","travel"],["detector","synthid","ai"]],
+    explanation: "Made with ChatGPT. It looks like a perfect winter postcard. Checking says otherwise: the weather service reports only the shore froze, no one else posted crowds on the ice, and the AI detector flags it at 98.9%.",
+    checks: {
+      account: ["Travel page · 310K followers · posts many ‘dream’ photos without credits.", "story"],
+      reverse: ["No earlier copies, and no other photos of crowds skating on Sevan this year.", "story"],
+      reports: ["Weather service: only the shallow shore froze this winter; the lake is not safe to walk on.", "story"],
+      provenance: ["No Content Credentials found (lost when re-saved).", "hive"],
+      detector: ["98.9% likely AI-generated. Most likely source: GPT Image 1.5 (80.9%).", "hive"]
+    },
+    det: { says: "fake", show: "98.9% AI" }
+  },
+  {
+    id: "sinkhole", tier: "check", media: "image", answer: "fake", category: "AI-generated image", trick: "sensation",
+    settle: "city hall, traffic police and news sites report no road collapse, and the account is two weeks old.",
+    credit: "AI image generated with ChatGPT (OpenAI) for this prototype.",
+    post: { name: "Yerevan Traffic Alerts", handle: "@yvn.traffic.alerts", time: "35 min", av: "#5b6b2f",
+      caption: "Mashtots Avenue this morning: the road collapsed under a car 😱 Avoid the area!", likes: "5,214", comments: "2,077 comments", shares: "4,390 shares" },
+    scene: { img: "img/sinkhole.jpg", desc: "A white Lada tipped into a sinkhole on a rainy Yerevan avenue, police tape, people with umbrellas." },
+    marks: [],
+    keys: [["city","police","traffic","news","report","nobody"],["account","new","created","weeks"],["detector","threshold","59"]],
+    explanation: "Made with ChatGPT. The detector gave it only 59%, below Hive's own 90% threshold, so it wasn't flagged as AI. The checks settle it: no road collapse in any official or news source, and a two-week-old account.",
+    checks: {
+      account: ["Created 2 weeks ago · 3.1K followers · re-posts other people's traffic videos.", "story"],
+      reverse: ["No earlier copies found.", "story"],
+      reports: ["City hall, traffic police and news sites: no road collapse on Mashtots Avenue today.", "story"],
+      provenance: ["No Content Credentials found.", "hive"],
+      detector: ["59.2% likely AI-generated: below Hive's own 90% threshold, so it isn't flagged. If AI, likely source: GPT Image (87.1%).", "hive"]
+    },
+    det: { says: "real", show: "59.2% AI" }
+  },
+  {
+    id: "fountains", tier: "check", media: "image", answer: "real", category: "Real photo that looks fake", trick: "none",
+    settle: "the original photo is on Wikimedia Commons from 2014, and the singing fountains on Republic Square really run colored light shows.",
+    credit: "Photo: Vyacheslav Argenberg, CC BY 4.0, via Wikimedia Commons (cropped).",
+    post: { name: "Yerevan Nights", handle: "@yerevan.nights", time: "1 d", av: "#7a3d8a",
+      caption: "Republic Square tonight 🌈✨ no edits! 📷 Vyacheslav Argenberg / Wikimedia Commons", likes: "7,940", comments: "512 comments", shares: "390 shares" },
+    scene: { img: "img/fountains.jpg", desc: "Rainbow-colored fountain jets lit up at night in front of a stone building." },
+    marks: [],
+    keys: [["fountain","singing","light","show","real place"],["original","commons","2014","photographer"],["detector","not ai","camera","metadata"]],
+    explanation: "Real. Republic Square's singing fountains really do this. Colors that look ‘too crazy’ aren't proof of AI: the original photo, its camera data and the place itself settle it.",
+    checks: {
+      account: ["City page since 2013 · credits photographers.", "story"],
+      reverse: ["Earliest copy: the photographer's own upload to Wikimedia Commons, June 2014.", "commons"],
+      reports: ["The singing fountains on Republic Square run colored light shows on summer evenings.", "fact"],
+      provenance: ["The original file keeps its camera data: taken 19 June 2014, 22:56.", "commons"],
+      detector: ["3.7% likely AI-generated: not AI.", "hive"]
+    },
+    det: { says: "real", show: "3.7% AI" }
+  },
+  {
+    id: "airport", tier: "check", media: "image", answer: "fake", category: "AI-generated image", trick: "urgency",
+    settle: "the airport's official website and channel show flights operating normally, and no news outlet reports cancellations.",
+    credit: "AI image generated with ChatGPT (OpenAI) for this prototype.",
+    post: { name: "Armenia Breaking 24", handle: "@armenia.breaking24", time: "18 min", av: "#a33a3a",
+      caption: "ALL flights from Zvartnots CANCELLED today!!! Total chaos, don't even go 😡 Share with anyone flying!", likes: "9,377", comments: "4,410 comments", shares: "11,206 shares" },
+    scene: { img: "img/airport.jpg", desc: "A packed airport departure hall with stressed travelers under a board full of red CANCELLED lines." },
+    marks: [],
+    keys: [["official","website","airport","channel","normal"],["news","report","nobody"],["share","urgent","breaking","emotion"],["detector","ai"]],
+    explanation: "Made with ChatGPT, including a perfectly readable departures board. Newer generators get text right, so ‘garbled text’ is no longer a reliable clue. The official airport channel shows normal flights.",
+    checks: {
+      account: ["Created 5 days ago · posts only ‘BREAKING’ items, no named editor.", "story"],
+      reverse: ["No earlier copies found.", "story"],
+      reports: ["Airport website and official channel: flights operating normally. No news outlet reports cancellations.", "story"],
+      provenance: ["No Content Credentials found.", "hive"],
+      detector: ["99.1% likely AI-generated. Most likely source: GPT Image 2 (93.1%).", "hive"]
+    },
+    det: { says: "fake", show: "99.1% AI" }
   }
 ];
 const ROUNDS = {
   pitch: ["cafe", "flood", "opera", "ararat"],
   full: ["cafe", "cascade", "sevan", "flood", "ararat", "opera", "decree", "voice", "mall"],
-  pairs: ["lights", "hills", "butterfly", "ducks", "vine", "tower", "mirror", "bee"]
+  pairs: ["lights", "hills", "butterfly", "ducks", "vine", "tower", "mirror", "bee"],
+  hard: ["sevanreal", "sevanai", "leopard", "fountains", "sinkhole", "airport"]
 };
 let ITEMS = ALL_ITEMS;
 
@@ -919,49 +1248,99 @@ const S = { phase: "start", name: "", idx: 0, score: 0, answers: [], cur: null, 
 function newCur() { return { verdict: null, conf: null, reason: "", checked: false, opened: [] }; }
 function setScore() { const p = $("#scorepill"); p.hidden = S.phase === "start"; p.textContent = S.score + " pts"; }
 
+// Each tab is its own screen: the hash picks the screen, the round state fills it.
+function playView() { const h = location.hash; return h === "#battle" ? "battle" : h === "#debrief" ? "debrief" : "hub"; }
 function render() {
-  const root = $("#view-play");
-  if (S.phase === "start") root.innerHTML = startHTML();
-  else if (S.phase === "summary") root.innerHTML = summaryHTML();
-  else root.innerHTML = gameHTML();
+  const root = $("#view-play"), view = playView();
+  if (view === "hub") root.innerHTML = startHTML();
+  else if (view === "debrief") root.innerHTML = S.phase === "summary" ? summaryHTML() : S.answers.some(Boolean) ? gameHTML() : emptyHTML("debrief");
+  else root.innerHTML = S.phase === "item" || S.phase === "reveal" ? gameHTML() : emptyHTML(S.phase === "summary" ? "done" : "battle");
   setScore();
 }
 
+function emptyHTML(kind) {
+  const [tag, title, text] = {
+    battle: ["Live Battle", "No battle running", "Pick a round in the Arena Hub, or jump straight into the featured gauntlet."],
+    done: ["Live Battle", "Round complete", "You've called every post in this round. Read the debrief, or start another round."],
+    debrief: ["Debrief", "Nothing to debrief yet", "Play a round first. After each call, the debrief shows what settles it and how the detectors did."]
+  }[kind];
+  const primary = kind === "done"
+    ? `<a class="btn btn-primary" href="#debrief">Open the debrief</a>`
+    : `<form id="joinform" class="empty-form"><button class="btn btn-primary" type="submit" data-mode="pitch">Enter gauntlet</button></form>`;
+  return `<section class="panel empty-state" aria-labelledby="empty-title">
+    <span class="tag accent">${tag}</span>
+    <h2 id="empty-title">${title}</h2>
+    <p>${text}</p>
+    <div class="empty-actions">${primary}<a class="btn" href="#play">Choose a round</a></div>
+  </section>`;
+}
+
 function startHTML() {
-  return `<div class="start">
-    <div class="panel start-hero">
-      <span class="eyebrow">Media literacy practice</span>
-      <h1>Real or <em>fake</em>? Make the call.</h1>
-      <p class="lede">Posts from a Yerevan feed: AI images, an edited photo, AI-written text, an AI voice, and real photos that look fake. Some you can spot by eye. Some nobody can, and the only way to win is to check.</p>
-      <form class="join" id="joinform">
-        <label for="nick" class="eyebrow" style="flex-basis:100%">Your nickname</label>
-        <input id="nick" maxlength="24" placeholder="e.g. Jury member 1" value="${esc(S.name)}" autocomplete="off">
-        <div class="modes">
-          <button class="btn btn-primary" type="submit" data-mode="pitch">Quick round <small>4 posts · about 2 min</small></button>
-          <button class="btn" type="submit" data-mode="full">Full round <small>9 posts · about 6 min</small></button>
-          <button class="btn" type="submit" data-mode="pairs">Detective round <small>8 real-or-AI photo pairs · about 6 min</small></button>
-          ${CUSTOM.length ? `<button class="btn" type="submit" data-mode="custom">Teacher's posts <small>${CUSTOM.length} post${CUSTOM.length === 1 ? "" : "s"} added by the teacher</small></button>` : ""}
-        </div>
-      </form>
-      <div class="kinds">
-        <div class="kind"><span class="tag neutral">Spot it</span><b>Trained eye</b><p>Cheap fakes still slip: garbled text, objects that don't fit, wrong reflections.</p></div>
-        <div class="kind"><span class="tag check">Check it</span><b>Verify</b><p>Flawless fakes need context: who posted it, who else reports it, what the watermark and detector say.</p></div>
+  const displayName = S.name || "Cadet Kai";
+  return `<div class="start hub">
+    <section class="panel hub-profile" aria-label="Operative profile">
+      <div class="hub-identity">
+        <div class="hub-avatar" aria-hidden="true">${esc(initials(displayName) || "KA")}</div>
+        <div><div class="hub-name">${esc(displayName)}</div><div class="hub-level">Level 14 · Cognitive Defender</div></div>
       </div>
-    </div>
-    <div class="panel rules">
-      <h2>How scoring works</h2>
-      <table>
-        <tr><td>Right call</td><td class="pos">+10</td></tr>
-        <tr><td>Your reason names a clue that really settles it</td><td class="pos">+3</td></tr>
-        <tr><td>Using “Can't tell, check it”</td><td class="neg">−2</td></tr>
-        <tr><td>Wrong while “Fairly sure” or “Certain”</td><td class="neg">−10</td></tr>
-      </table>
-      <p style="color:var(--ink-2);font-size:14px">Checking costs a little, like in real life. On easy posts, trust your eye. On hard ones, guessing is a gamble.</p>
-      <div class="engine">
-        <span class="eyebrow">What's under the hood</span>
-        <p>Every answer comes from posts we made or sourced ourselves. The check tools show <b>real results</b> from real tools run on these exact files: Hive's AI detector, Google's SynthID watermark check, FineTuned LFM3 Omni, and Wikimedia Commons records. Tools help, but they're not the judge. You'll see where they fail.</p>
+      <div class="hub-cdr">780<small>COGNITIVE DEFENSE RATING</small></div>
+      <div style="flex-basis:100%">
+        <div class="xp-row"><span>Progress to Tier XV</span><span>8,420 / 10,000 XP</span></div>
+        <div class="xp-track" role="progressbar" aria-label="Progress to Tier XV" aria-valuemin="0" aria-valuemax="10000" aria-valuenow="8420"><i></i></div>
       </div>
+    </section>
+
+    <div class="hub-feature-grid">
+      <section class="panel gauntlet">
+        <div class="gauntlet-top"><span class="tag accent">Featured gauntlet</span><span class="rank-mark">RANK IV</span></div>
+        <h1>Synthetic Storm</h1>
+        <p>Four posts. One focused run. Separate what looks real from what the evidence supports.</p>
+        <div class="gauntlet-metrics"><span>4 trials</span><span>Images · text · audio</span><span>About 2 minutes</span></div>
+        <form class="join" id="joinform">
+          <label for="nick" class="eyebrow" style="flex-basis:100%">Your calls appear under</label>
+          <input id="nick" maxlength="24" placeholder="Choose a nickname" value="${esc(S.name)}" autocomplete="nickname">
+          <div class="modes">
+            <button class="btn btn-primary" type="submit" data-mode="pitch">Enter gauntlet</button>
+            <button class="btn" type="submit" data-mode="full">Full round <small>9 posts · about 6 min</small></button>
+            <button class="btn" type="submit" data-mode="pairs">Detective round <small>8 photo pairs · about 6 min</small></button>
+            <button class="btn" type="submit" data-mode="hard">Harder round <small>6 posts · about 4 min</small></button>
+            ${CUSTOM.length ? `<button class="btn" type="submit" data-mode="custom">Teacher's posts <small>${CUSTOM.length} items</small></button>` : ""}
+          </div>
+        </form>
+      </section>
+
+      <section class="panel blindspot" aria-labelledby="blindspot-title">
+        <span class="tag fake">Needs practice</span>
+        <h2 id="blindspot-title">Voice clones</h2>
+        <p>Audio can sound familiar while the source is invented. Listen for timing and context before you trust a voice.</p>
+        <div class="mini-track" role="progressbar" aria-label="Voice clone practice accuracy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54"><i></i></div>
+        <p><b>54%</b> practice accuracy · demo profile</p>
+        <a class="btn" href="#teacher">Review susceptibility</a>
+      </section>
     </div>
+
+    <section aria-labelledby="protocols-title">
+      <div class="hub-section-head"><h2 id="protocols-title">Training modes</h2><span>Choose a way to practice</span></div>
+      <div class="protocol-grid">
+        <a class="protocol" href="#battle"><span class="protocol-mark">01 / LIVE</span><strong>1v1 Showdown</strong><small>Quick calls against a timed feed</small></a>
+        <a class="protocol" href="#play"><span class="protocol-mark">02 / AUDIO</span><strong>Acoustic Lab</strong><small>Listen for cloned voice cues</small></a>
+        <a class="protocol" href="#play"><span class="protocol-mark">03 / IMAGE</span><strong>Artifact Hunt</strong><small>Inspect details, then compare</small></a>
+        <a class="protocol" href="#teacher"><span class="protocol-mark">04 / CLASS</span><strong>Cohort Clash</strong><small>See how class resilience changes</small></a>
+      </div>
+    </section>
+
+    <section class="panel cohort-card" aria-labelledby="cohort-title">
+      <div class="hub-section-head"><h2 id="cohort-title">Cohort leaders</h2><a class="linkbtn" href="#teacher">View susceptibility</a></div>
+      <div class="cohort-row"><span class="cohort-rank">01</span><div><strong>Elena V.</strong><small>Class demo · 12-day streak</small></div><span class="cohort-score">845 CDR</span></div>
+      <div class="cohort-row"><span class="cohort-rank">02</span><div><strong>${esc(displayName)} <span class="tag accent">You</span></strong><small>Class demo · 7-day streak</small></div><span class="cohort-score">780 CDR</span></div>
+      <div class="cohort-row"><span class="cohort-rank">03</span><div><strong>Marcus R.</strong><small>Class demo · 4-day streak</small></div><span class="cohort-score">765 CDR</span></div>
+    </section>
+
+    <details class="panel round-rules"><summary>How scoring and checking work</summary>
+      <table><tr><td>Correct call</td><td class="pos">+10 XP</td></tr><tr><td>Strong reason with a settling clue</td><td class="pos">+3 XP</td></tr><tr><td>Use a check tool</td><td class="neg">−2 XP</td></tr><tr><td>Wrong call with high confidence</td><td class="neg">−10 XP</td></tr></table>
+      <p style="padding-bottom:14px;color:var(--ink-2);font-size:13px">A detector can help, but it is not the judge. Check the source and context when a post is hard to verify by eye.</p>
+    </details>
+    <p class="credit">Sample profile and cohort rankings are illustrative demo content. Training posts use locally bundled media.</p>
   </div>`;
 }
 
@@ -1023,15 +1402,36 @@ function checkHTML(item, reveal) {
 function gameHTML() {
   const item = ITEMS[S.idx];
   const reveal = S.phase === "reveal";
+  if (reveal) return debriefHTML(item);
   const prog = ITEMS.map((it, i) => {
     const a = S.answers[i];
     const cls = a ? (a.correct ? "done-good" : "done-bad") : i === S.idx ? "now" : "";
     return `<span class="${cls}" title="Post ${i + 1}"></span>`;
   }).join("");
-  return `<div class="game">
-    <div class="progress" aria-label="Progress">${prog}</div>
-    <div class="leftcol">${postHTML(item, reveal)}${checkHTML(item, reveal)}</div>
-    <aside class="panel side" id="side">${reveal ? revealHTML(item) : decideHTML(item)}</aside>
+  return `<div class="battle">
+    <div class="battle-head">
+      <div><strong>ROUND ${String(S.idx + 1).padStart(2,"0")} / ${String(ITEMS.length).padStart(2,"0")}</strong><br><span>Trust your eye, then check the source</span></div>
+      <div class="battle-rival"><span>${esc(S.name || "Cadet")} <b>YOU</b></span><span>·</span><span><b>GAUNTLET</b></span></div>
+    </div>
+    <div class="game">
+      <div class="progress" aria-label="Round progress">${prog}</div>
+      <div class="leftcol">${postHTML(item, false)}${checkHTML(item, false)}</div>
+      <aside class="panel side" id="side">${decideHTML(item)}</aside>
+    </div>
+  </div>`;
+}
+
+function debriefHTML(item) {
+  const a = S.answers[S.idx];
+  return `<div class="debrief-screen">
+    <div class="battle-head">
+      <div><strong>ROUND DEBRIEF</strong><br><span>Post ${String(S.idx + 1).padStart(2,"0")} of ${String(ITEMS.length).padStart(2,"0")} · review the evidence before moving on</span></div>
+      <div class="battle-rival"><span>Your call: <b>${a.verdict === "real" ? "Real" : "Fake"}</b></span><span>·</span><span>${a.points >= 0 ? "+" : "−"}${Math.abs(a.points)} XP</span></div>
+    </div>
+    <div class="debrief-columns">
+      <div>${postHTML(item, true)}${checkHTML(item, true)}</div>
+      <aside class="panel side" id="side">${revealHTML(item)}</aside>
+    </div>
   </div>`;
 }
 
@@ -1104,7 +1504,7 @@ function playerStats() {
   };
 }
 
-const SHORT = { cafe: "Café on Northern Avenue", cascade: "Morning at the Cascade", sevan: "Lake Sevan “no filter”", flood: "Flooded Republic Square", ararat: "“UFO” cloud over Ararat", opera: "Opera “on fire”", decree: "Saturday-school decree (Armenian)", voice: "“Dean” voice message", mall: "Free iPhone queue", lights: "Strange lights over the rooftops", hills: "“Caves” on the hill", butterfly: "Butterfly macro “no filter”", ducks: "“Unedited” lake ducks", vine: "Autumn vine close-up", tower: "“Ghost building” in the tower", mirror: "Winter road in the mirror", bee: "Spring bee close-up" };
+const SHORT = { leopard: "Snow leopard on Northern Avenue", sevanreal: "Sevan shore ice (real)", sevanai: "Skating on frozen Sevan", sinkhole: "Mashtots Avenue sinkhole", fountains: "Rainbow fountains", airport: "All Zvartnots flights cancelled", cafe: "Café on Northern Avenue", cascade: "Morning at the Cascade", sevan: "Lake Sevan “no filter”", flood: "Flooded Republic Square", ararat: "“UFO” cloud over Ararat", opera: "Opera “on fire”", decree: "Saturday-school decree (Armenian)", voice: "“Dean” voice message", mall: "Free iPhone queue", lights: "Strange lights over the rooftops", hills: "“Caves” on the hill", butterfly: "Butterfly macro “no filter”", ducks: "“Unedited” lake ducks", vine: "Autumn vine close-up", tower: "“Ghost building” in the tower", mirror: "Winter road in the mirror", bee: "Spring bee close-up" };
 
 function detectorHTML() {
   const rows = ALL_ITEMS.map(it => {
@@ -1117,7 +1517,7 @@ function detectorHTML() {
   const checked = ALL_ITEMS.filter(it => it.det), right = checked.filter(it => it.det.says === it.answer).length;
   return `<section class="detcard">
     <div><span class="eyebrow">Gym vs. gate</span><h3>The same posts, through real AI detectors</h3>
-    <p>If you trusted the detector alone (Hive for images, FineTuned LFM3 Omni for text), you'd get <b>${right} of ${checked.length}</b> right. It nailed every AI image, but it can't read a lying caption, and it called the AI-written Armenian post 100% human. That's why we train people, not just filters.</p></div>
+    <p>If you trusted the detector alone (Hive for images, FineTuned LFM3 Omni for text), you'd get <b>${right} of ${checked.length}</b> right. It missed two images from ChatGPT's newest generator, can't read a lying caption, and called the AI-written Armenian post 100% human. That's why we train people, not just filters.</p></div>
     <div class="scroll"><table class="dettable"><thead><tr><th>Post</th><th>Truth</th><th>Detector said</th><th>Detector was</th></tr></thead><tbody>${rows}</tbody></table></div>
   </section>`;
 }
@@ -1152,7 +1552,8 @@ function summaryHTML() {
       <span>Opera: edited with Google Gemini (smoke, flames and fire trucks added) from <a href="https://commons.wikimedia.org/wiki/File:Jerewan-Oper-msu-wlm-2435.jpg" target="_blank" rel="noopener">a photo by Matthias Süßen</a>, CC BY-SA 4.0; the edit is shared under the same license.</span>
       <span>Cascade: <a href="https://commons.wikimedia.org/wiki/File:2014_Erywa%C5%84,_Park_przy_Kaskadach_(02).jpg" target="_blank" rel="noopener">Marcin Konsek</a>, CC BY-SA 4.0. Ararat: <a href="https://commons.wikimedia.org/wiki/File:Agri_Da%C4%9F%C4%B1_ve_Ete%C4%9Findeki_K%C3%B6y.jpg" target="_blank" rel="noopener">Cetintas555</a>, CC BY-SA 4.0. Store queue: <a href="https://commons.wikimedia.org/wiki/File:Line_at_the_opening_of_first_Apple_Store_in_America.jpg" target="_blank" rel="noopener">Blake Patterson</a>, CC BY 2.0. All via Wikimedia Commons, cropped.</span>
       <span>Detective round pairs: original photos by the project team (Panasonic DC-G90, 2025–2026); the AI variants were generated from those photos for this prototype. The forensic change tables are in <b>docs/refs</b>.</span>
-      <span>Detector results were recorded on 11 November 2026 with Hive's public demo, FineTuned LFM3 Omni and Google's SynthID check in Gemini.</span></div>
+      <span>Snow leopard, frozen-Sevan skating, sinkhole and airport: AI images generated with ChatGPT (OpenAI). Sevan shore ice: <a href="https://commons.wikimedia.org/wiki/File:Sevan-Winter_(27).jpg" target="_blank" rel="noopener">23artashes</a>, CC BY-SA 3.0. Fountains: <a href="https://commons.wikimedia.org/wiki/File:Yerevan,_Musical_fountains,_Colored_fountains,_Republic_Square_at_night,_Armenia.jpg" target="_blank" rel="noopener">Vyacheslav Argenberg</a>, CC BY 4.0.</span>
+      <span>Detector results were recorded on 11–12 November 2026 with Hive's public demo, FineTuned LFM3 Omni and Google's SynthID check in Gemini.</span></div>
   </section>`;
 }
 
@@ -1191,8 +1592,10 @@ document.addEventListener("submit", e => {
   const mode = (e.submitter && e.submitter.dataset.mode) || "pitch";
   ITEMS = mode === "custom" ? CUSTOM.slice() : ROUNDS[mode].map(id => ALL_ITEMS.find(it => it.id === id));
   S.mode = mode;
-  S.name = ($("#nick").value || "").trim() || "Guest";
-  S.phase = "item"; S.idx = 0; S.score = 0; S.answers = []; S.cur = newCur();
+  const nick = $("#nick");
+  S.name = (nick ? nick.value.trim() : S.name) || "Guest";
+  S.phase = "item"; S.idx = 0; S.score = 0; S.answers = []; S.cur = newCur(); S.resume = null;
+  location.hash = "#battle";
   render(); window.scrollTo({ top: 0 });
 });
 
@@ -1210,11 +1613,12 @@ document.addEventListener("click", async e => {
   if (t.id === "submit") { await submit(); return; }
   if (t.id === "next") {
     if (speaking) { const tt = await getTTS(); try { tt && tt.stop(); } catch (err) {} }
-    if (S.idx + 1 < ITEMS.length) { S.idx++; S.phase = "item"; S.cur = newCur(); }
-    else S.phase = "summary";
+    S.resume = null;
+    if (S.idx + 1 < ITEMS.length) { S.idx++; S.phase = "item"; S.cur = newCur(); location.hash = "#battle"; }
+    else { S.phase = "summary"; location.hash = "#debrief"; }
     render(); window.scrollTo({ top: 0, behavior: "smooth" }); return;
   }
-  if (t.id === "again") { S.phase = "start"; render(); }
+  if (t.id === "again") { S.phase = "start"; location.hash = "#play"; render(); }
 });
 document.addEventListener("input", e => {
   if (e.target.id === "reason" && S.cur) S.cur.reason = e.target.value;
@@ -1252,7 +1656,10 @@ const POOL = [
   { id: "mall", name: "Free iPhone queue", tier: "check", fake: true, ease: 0, trick: "reused" },
   { id: "protest", name: "Old crowd photo posted as “today”", tier: "check", fake: true, ease: 0.1, trick: "reused" },
   { id: "ararat", name: "“UFO” cloud over Ararat", tier: "check", fake: false, ease: -0.7, trick: "none" },
-  { id: "hail", name: "Hailstorm in Gyumri", tier: "check", fake: false, ease: -0.2, trick: "none" }
+  { id: "hail", name: "Hailstorm in Gyumri", tier: "check", fake: false, ease: -0.2, trick: "none" },
+  { id: "leopard", name: "Snow leopard on Northern Avenue", tier: "check", fake: true, ease: -0.9, trick: "sensation" },
+  { id: "sinkhole", name: "Mashtots Avenue sinkhole", tier: "check", fake: true, ease: -0.6, trick: "sensation" },
+  { id: "fountains", name: "Rainbow fountains (real)", tier: "check", fake: false, ease: -0.5, trick: "none" }
 ];
 function tricksCardHTML(last) {
   const rows = Object.keys(TRICKS).map(k => {
@@ -1324,6 +1731,12 @@ function renderTeacher() {
   const accNow = avg(last, m => m.acc), acc0 = avg(0, m => m.acc);
   const chkNow = avg(last, m => m.checkRate), chk0 = avg(0, m => m.checkRate);
   const cwNow = avg(last, m => m.confWrongRate), cw0 = avg(0, m => m.confWrongRate);
+  const vectors = [
+    { label: "Visual spotting", value: avg(last, m => m.accSpot) },
+    { label: "Source checking", value: chkNow },
+    { label: "Confidence calibration", value: 1 - cwNow },
+    { label: "Reason quality", value: avg(last, m => 1 - Math.min(1, m.wrongReasons / POOL.length)) }
+  ];
   const roster = CLASS.map(st => ({ name: st.name, m: st.m[last], trend: st.m.map(x => x.acc) }));
   if (you) roster.unshift({ name: you.name, you: true, m: you.m[0], trend: [you.m[0].acc] });
   const groups = { trusting: [], suspicious: [], guessing: [], sharp: [] };
@@ -1349,9 +1762,9 @@ function renderTeacher() {
 
   $("#view-teacher").innerHTML = `
     <div class="t-head">
-      <div><span class="eyebrow">Teacher view · Grade 9B · Media literacy</span><h1>How the class is doing</h1>
-      <p>Session 4 of the semester · ${CLASS.length} students${you ? " + you" : ""} · 12 posts per session</p></div>
-      <span class="tag check">Demo data: fictional class</span>
+      <div><span class="eyebrow">Teacher view · Grade 9B · Media literacy</span><h1>Susceptibility matrix</h1>
+      <p>Session 4 of the semester · ${CLASS.length} students${you ? " + you" : ""} · ${POOL.length} posts per session</p></div>
+      <div class="t-actions"><span class="tag check">Fictional class demo</span><a class="btn btn-primary" href="#add-post">Prepare a post</a></div>
     </div>
     <div class="kpis">
       ${kpi("Class accuracy", pct(accNow), `${arrow(accNow, acc0, true)} since 16 Sep`)}
@@ -1359,6 +1772,10 @@ function renderTeacher() {
       ${kpi("Too trusting", groups.trusting.filter(r => !r.you).length + " students", `was ${trusting0} in September`)}
       ${kpi("Answers that were sure and wrong", pct(cwNow), `${arrow(cwNow, cw0, false)} since 16 Sep`)}
     </div>
+    <section class="panel vector-matrix" aria-labelledby="vectors-title">
+      <div class="tbl-h"><div><h2 id="vectors-title" style="font-size:19px">Susceptibility matrix</h2><p class="sub">Four signals from the fictional demo cohort · current session</p></div><span class="tag neutral">Class profile</span></div>
+      <div class="vector-grid">${vectors.map((v, i) => `<div class="vector-card ${i === 2 && cwNow > .25 ? "risk" : ""}"><header><span>${v.label}</span><strong>${pct(v.value)}</strong></header><div class="mini-track" role="progressbar" aria-label="${v.label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(v.value * 100)}"><i style="width:${Math.max(0,Math.min(100,Math.round(v.value * 100)))}%"></i></div></div>`).join("")}</div>
+    </section>
     <div class="tgrid">
       <section class="panel card">
         <h2>Accuracy across the semester</h2>
@@ -1601,7 +2018,7 @@ Reply with only JSON:
 {"lean":"likely_ai"|"likely_real"|"cant_tell","confidence":"low"|"medium"|"high",
 "clues":[{"text":"one short sentence","x":number 0-100 or null,"y":number 0-100 or null,"points_to":"ai"|"real"|"neutral"}],
 "cant_check":["2-3 short questions only a person can verify, like the source or other reports"],
-"trick":"engagement"|"authentic"|"urgency"|"edited"|"authority"|"impersonation"|"reused"|"none",
+"trick":"engagement"|"authentic"|"urgency"|"edited"|"authority"|"impersonation"|"reused"|"sensation"|"none",
 "tier":"spot" if the clues are visible to a careful student, otherwise "check",
 "category_if_fake":"short label","category_if_real":"short label",
 "explanation_if_fake":"2-3 plain sentences for students","explanation_if_real":"2-3 plain sentences for students",
@@ -1683,8 +2100,8 @@ function resetAdd() { Object.assign(ADD, { account: "", caption: "", context: ""
 function playCustom() {
   if (!CUSTOM.length) return;
   ITEMS = CUSTOM.slice(); S.mode = "custom";
-  S.name = S.name || "Teacher"; S.phase = "item"; S.idx = 0; S.score = 0; S.answers = []; S.cur = newCur();
-  location.hash = "#play";
+  S.name = S.name || "Teacher"; S.phase = "item"; S.idx = 0; S.score = 0; S.answers = []; S.cur = newCur(); S.resume = null;
+  if (location.hash === "#battle") route(); else location.hash = "#battle";
 }
 
 document.addEventListener("click", e => {
@@ -1722,17 +2139,52 @@ document.addEventListener("change", async e => {
 
 /* ---------- Routing ---------- */
 function route() {
-  const v = location.hash === "#teacher" ? "teacher" : location.hash === "#add-post" ? "add" : "play";
+  const hash = location.hash || "#play";
+  // Debrief mid-round shows the last answered post; Live Battle then returns to the post
+  // you were on, with your half-made call intact.
+  if (hash === "#debrief" && S.phase !== "summary" && S.answers.length) {
+    const answered = S.answers.map((a, i) => a ? i : -1).filter(i => i >= 0);
+    if (answered.length) {
+      if (S.phase === "item") S.resume = { idx: S.idx, cur: S.cur };
+      S.idx = answered[answered.length - 1]; S.phase = "reveal";
+    }
+  }
+  if (hash === "#battle" && S.resume) { S.idx = S.resume.idx; S.cur = S.resume.cur; S.phase = "item"; S.resume = null; }
+  const v = hash === "#teacher" || hash === "#matrix" ? "teacher" : hash === "#add-post" ? "add" : "play";
   $("#view-play").hidden = v !== "play";
   $("#view-teacher").hidden = v !== "teacher";
   $("#view-add").hidden = v !== "add";
-  $("#tab-play").setAttribute("aria-current", v === "play" ? "page" : "false");
+  const pv = playView();
+  $("#tab-play").setAttribute("aria-current", v === "play" && pv === "hub" ? "page" : "false");
+  $("#tab-battle").setAttribute("aria-current", v === "play" && pv === "battle" ? "page" : "false");
+  $("#tab-debrief").setAttribute("aria-current", v === "play" && pv === "debrief" ? "page" : "false");
   $("#tab-teacher").setAttribute("aria-current", v === "teacher" ? "page" : "false");
-  $("#tab-add").setAttribute("aria-current", v === "add" ? "page" : "false");
   if (v === "teacher") renderTeacher(); else if (v === "add") renderAdd(); else render();
   window.scrollTo({ top: 0 });
 }
 window.addEventListener("hashchange", route);
+
+// Haptics: Android vibrates; iOS 18+ Safari has no vibrate API but plays its own tick when a
+// switch toggles, so a hidden switch is flipped instead. Other devices get the visual press only.
+const iosHaptic = (() => {
+  if (navigator.vibrate || !/iP(hone|ad|od)/.test(navigator.userAgent)) return null;
+  const label = document.createElement("label");
+  label.setAttribute("aria-hidden", "true");
+  label.style.cssText = "position:fixed;left:-200px;top:0;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none";
+  const sw = document.createElement("input");
+  sw.type = "checkbox"; sw.setAttribute("switch", ""); sw.tabIndex = -1;
+  label.appendChild(sw); document.body.appendChild(label);
+  return label;
+})();
+function haptic() {
+  try { if (navigator.vibrate) navigator.vibrate(8); else if (iosHaptic) iosHaptic.click(); } catch (e) {}
+}
+document.addEventListener("click", e => {
+  const a = e.target.closest(".tabs a, .brand");
+  if (!a) return;
+  haptic();
+  if (a.getAttribute("href") === (location.hash || "#play")) { e.preventDefault(); route(); }
+});
 route();
 </script>
 
