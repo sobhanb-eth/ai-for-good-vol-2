@@ -96,6 +96,7 @@ Posts added by the teacher are saved in that browser only (this is a prototype).
 
 - **The detector never decides the answer.** In our tests it caught every AI image, but called AI-written Armenian text 100% human and couldn't catch a real photo with a false caption. The teacher sets the answer.
 - The detector results shown on the built-in posts were recorded on 11 November 2026 with Hive's public demo, FineTuned LFM3 Omni and Google's SynthID check in Gemini.
+- The **gauntlet** (the featured quick round) ends with a real/AI pair: a real news photo of a fire at a shopping row in Yerevan (source still to be credited) and an AI-generated ‘CITY’ shopping-centre fire.
 - The **Harder round** posts (snow leopard, frozen-Sevan skating, sinkhole, airport) are AI images generated with ChatGPT; two of them fooled Hive's detector, which is the point of the round. The Sevan shore ice and Republic Square fountains are real Wikimedia Commons photos.
 - The **Detective round** posts are built from the team's own camera photos (Panasonic DC-G90, 2025–2026) and AI variants generated from them. The untouched originals keep their camera EXIF; the AI files carry none. No automated detector ran on these pairs — the original photo is the evidence. Forensic change tables: `docs/refs/`.
 - Image credits: AI images made with Google Gemini. Real photos from Wikimedia Commons by Marcin Konsek (CC BY-SA 4.0), Cetintas555 (CC BY-SA 4.0), Blake Patterson (CC BY 2.0) and Matthias Süßen (CC BY-SA 4.0; the edited Opera image is shared under the same license).

@@ -1169,10 +1169,10 @@ const ALL_ITEMS = [
   }
 ];
 const ROUNDS = {
-  pitch: ["cafe", "flood", "opera", "ararat"],
+  pitch: ["cafe", "flood", "opera", "ararat", "firereal", "firefake"],
   full: ["cafe", "cascade", "sevan", "flood", "ararat", "opera", "decree", "voice", "mall"],
   pairs: ["lights", "hills", "butterfly", "ducks", "vine", "tower", "mirror", "bee"],
-  hard: ["sevanreal", "sevanai", "leopard", "fountains", "sinkhole", "airport", "firereal", "firefake"]
+  hard: ["sevanreal", "sevanai", "leopard", "fountains", "sinkhole", "airport"]
 };
 let ITEMS = ALL_ITEMS;
 
@@ -1340,8 +1340,8 @@ function startHTML() {
       <section class="panel gauntlet">
         <div class="gauntlet-top"><span class="tag accent">Featured gauntlet</span><span class="rank-mark">RANK IV</span></div>
         <h1>Synthetic Storm</h1>
-        <p>Four posts. One focused run. Separate what looks real from what the evidence supports.</p>
-        <div class="gauntlet-metrics"><span>4 trials</span><span>Images · text · audio</span><span>About 2 minutes</span></div>
+        <p>Six posts. One focused run. Separate what looks real from what the evidence supports.</p>
+        <div class="gauntlet-metrics"><span>6 trials</span><span>Images · text · audio</span><span>About 3 minutes</span></div>
         <form class="join" id="joinform">
           <label for="nick" class="eyebrow" style="flex-basis:100%">Your calls appear under</label>
           <input id="nick" maxlength="24" placeholder="Choose a nickname" value="${esc(S.name)}" autocomplete="nickname">
@@ -1349,7 +1349,7 @@ function startHTML() {
             <button class="btn btn-primary" type="submit" data-mode="pitch">Enter gauntlet</button>
             <button class="btn" type="submit" data-mode="full">Full round <small>9 posts · about 6 min</small></button>
             <button class="btn" type="submit" data-mode="pairs">Detective round <small>8 photo pairs · about 6 min</small></button>
-            <button class="btn" type="submit" data-mode="hard">Harder round <small>8 posts · about 5 min</small></button>
+            <button class="btn" type="submit" data-mode="hard">Harder round <small>6 posts · about 4 min</small></button>
             ${CUSTOM.length ? `<button class="btn" type="submit" data-mode="custom">Teacher's posts <small>${CUSTOM.length} items</small></button>` : ""}
           </div>
         </form>
