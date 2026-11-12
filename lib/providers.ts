@@ -18,29 +18,30 @@ function hiveVersion(): "v2" | "v3" {
   if (explicit === "v2" || explicit === "v3") return explicit;
   return /\/api\/v3\//.test(process.env.HIVE_API_URL || "") ? "v3" : "v2";
 }
-const HIVE_VERSION = hiveVersion();
-const HIVE_DEFAULT_URL =
-  HIVE_VERSION === "v2"
+function hiveDefaultUrl(): string {
+  return hiveVersion() === "v2"
     ? "https://api.thehive.ai/api/v2/task/sync"
     : "https://api.thehive.ai/api/v3/hive/ai-generated-and-deepfake-content-detection";
+}
 
+// Getters, not constants: on Cloudflare Workers (OpenNext) process.env is filled from the
+// Worker's secrets per request, so values must be read at call time, not at module load.
 export const CFG = {
   // LLM: drafts the analysis on "Add a post" and coaches students' reasoning.
-  llmKey: process.env.OPENAI_API_KEY || "",
+  get llmKey() { return process.env.OPENAI_API_KEY || ""; },
   // Must accept images: the "Add a post" analysis sends the uploaded picture.
-  llmModel: process.env.OPENAI_MODEL || "gpt-4.1-mini",
-  llmUrl: chatCompletionsUrl(process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"),
+  get llmModel() { return process.env.OPENAI_MODEL || "gpt-4.1-mini"; },
+  get llmUrl() { return chatCompletionsUrl(process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"); },
   // Hive: AI-generated image detection (also reports Content Credentials / C2PA).
-  // v3 = self-serve "Service API Keys" (default). v2 = older enterprise project keys.
-  hiveVersion: HIVE_VERSION,
-  hiveKey: process.env.HIVE_API_KEY || "",
-  hiveUrl: process.env.HIVE_API_URL || HIVE_DEFAULT_URL,
+  get hiveVersion() { return hiveVersion(); },
+  get hiveKey() { return process.env.HIVE_API_KEY || ""; },
+  get hiveUrl() { return process.env.HIVE_API_URL || hiveDefaultUrl(); },
   // Hive: AI-generated audio detection. Leave the audio key empty to reuse HIVE_API_KEY.
-  hiveAudioKey: process.env.HIVE_AUDIO_API_KEY || "",
-  hiveAudioUrl: process.env.HIVE_AUDIO_API_URL || process.env.HIVE_API_URL || HIVE_DEFAULT_URL,
+  get hiveAudioKey() { return process.env.HIVE_AUDIO_API_KEY || ""; },
+  get hiveAudioUrl() { return process.env.HIVE_AUDIO_API_URL || process.env.HIVE_API_URL || hiveDefaultUrl(); },
   // OpenAI: AI-written text detection (LLM judgment). Reuses the OpenAI key and
   // endpoint above; OPENAI_TEXT_MODEL can point at a smarter model than OPENAI_MODEL.
-  textModel: process.env.OPENAI_TEXT_MODEL || "gpt-6.1-terra",
+  get textModel() { return process.env.OPENAI_TEXT_MODEL || "gpt-6.1-terra"; },
 };
 
 export function providerStatus() {

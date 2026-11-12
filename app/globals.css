@@ -1,4 +1,4 @@
-/* Global reset. The game itself (public/game.html) carries its own design system;
+/* Global reset. The game itself (public/index.html) carries its own design system;
    this only styles the rare fallback page React renders directly. */
 html,
 body {

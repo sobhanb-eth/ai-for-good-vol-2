@@ -80,10 +80,10 @@ Posts added by the teacher are saved in that browser only (this is a prototype).
 
 | File | What it is |
 |---|---|
-| `public/game.html` | The whole app: game, teacher view, Add a post. The built-in posts are in the `ALL_ITEMS` list. |
+| `public/index.html` | The whole app: game, teacher view, Add a post. The built-in posts are in the `ALL_ITEMS` list. |
 | `public/shim.js` | Connects the app to the route handlers (LLM, detectors, browser voice) and registers the service worker. |
 | `public/img/` | Images used by the built-in posts. |
-| `public/img/pairs/` | The Detective round: web-sized copies of the 8 real-or-AI photo pairs (sources in `public/img/ORIGINAL` and `public/img/GENERATED`). |
+| `public/img/pairs/` | The Detective round: web-sized copies of the 8 real-or-AI photo pairs (full-size sources in `media-src/ORIGINAL` and `media-src/GENERATED`, kept out of `public/` so they are not published). |
 | `public/manifest.webmanifest` + `public/sw.js` + `public/icons/` | PWA manifest, offline cache, app icons. |
 | `app/api/config/` | Reports which features have keys. |
 | `app/api/llm/` | Calls the OpenAI-compatible endpoint with the key from the environment. |

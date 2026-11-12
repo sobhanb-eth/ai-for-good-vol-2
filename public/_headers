@@ -1,0 +1,9 @@
+# Cloudflare static asset headers (OpenNext build).
+/_next/static/*
+  Cache-Control: public,max-age=31536000,immutable
+
+# The service worker and manifest must update promptly, or installed copies stay on an old version.
+/sw.js
+  Cache-Control: no-cache
+/manifest.webmanifest
+  Cache-Control: no-cache

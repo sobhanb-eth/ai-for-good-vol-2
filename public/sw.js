@@ -1,10 +1,9 @@
 /* FakeSpotter Arena service worker.
    - Pre-caches the app shell and post images so the game plays offline.
    - API calls (/api/*) always go to the network and are never cached. */
-const CACHE = "fakespotter-v6";
+const CACHE = "fakespotter-v7";
 const PRECACHE = [
   "/",
-  "/game.html",
   "/shim.js",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
@@ -76,7 +75,7 @@ self.addEventListener("fetch", (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match("/game.html")))
+        .catch(() => caches.match(req, { ignoreSearch: true }).then((hit) => hit || caches.match("/")))
     );
     return;
   }

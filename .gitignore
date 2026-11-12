@@ -47,3 +47,8 @@ next-env.d.ts
 .turbo
 .swc
 docs/
+
+# cloudflare (OpenNext / wrangler)
+.open-next
+.wrangler
+.dev.vars*
